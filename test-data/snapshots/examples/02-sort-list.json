@@ -1,0 +1,272 @@
+{
+  "can drag an item down": [
+    {
+      "element": "li[data-testid=\"item-1\"]",
+      "keyframes": [
+        {
+          "transform": "scale(1.1)"
+        }
+      ],
+      "options": {
+        "fill": "forwards",
+        "duration": 250
+      }
+    },
+    {
+      "element": "li[data-testid=\"item-2\"]",
+      "keyframes": [
+        {
+          "transform": "translate(0px,90px)"
+        },
+        {
+          "transform": "translate(0px,0px)"
+        }
+      ],
+      "options": {
+        "fill": "both",
+        "duration": 200,
+        "easing": "cubic-bezier(.2,0,0,1)"
+      }
+    },
+    {
+      "element": "div",
+      "keyframes": [
+        {
+          "transform": "translate(250px,244px)"
+        }
+      ],
+      "options": {
+        "fill": "both",
+        "duration": 181,
+        "easing": "cubic-bezier(.2,1,.1,1)"
+      }
+    }
+  ],
+  "can drag an item up": [
+    {
+      "element": "li[data-testid=\"item-3\"]",
+      "keyframes": [
+        {
+          "transform": "scale(1.1)"
+        }
+      ],
+      "options": {
+        "fill": "forwards",
+        "duration": 250
+      }
+    },
+    {
+      "element": "li[data-testid=\"item-2\"]",
+      "keyframes": [
+        {
+          "transform": "translate(0px,-110px)"
+        },
+        {
+          "transform": "translate(0px,0px)"
+        }
+      ],
+      "options": {
+        "fill": "both",
+        "duration": 200,
+        "easing": "cubic-bezier(.2,0,0,1)"
+      }
+    },
+    {
+      "element": "li[data-testid=\"item-1\"]",
+      "keyframes": [
+        {
+          "transform": "translate(0px,-110px)"
+        },
+        {
+          "transform": "translate(0px,0px)"
+        }
+      ],
+      "options": {
+        "fill": "both",
+        "duration": 200,
+        "easing": "cubic-bezier(.2,0,0,1)"
+      }
+    },
+    {
+      "element": "div",
+      "keyframes": [
+        {
+          "transform": "translate(250px,194px)"
+        }
+      ],
+      "options": {
+        "fill": "both",
+        "duration": 180,
+        "easing": "cubic-bezier(.2,1,.1,1)"
+      }
+    }
+  ],
+  "can drag multiple times": [
+    {
+      "element": "li[data-testid=\"item-0\"]",
+      "keyframes": [
+        {
+          "transform": "scale(1.1)"
+        }
+      ],
+      "options": {
+        "fill": "forwards",
+        "duration": 250
+      }
+    },
+    {
+      "element": "li[data-testid=\"item-1\"]",
+      "keyframes": [
+        {
+          "transform": "translate(0px,70px)"
+        },
+        {
+          "transform": "translate(0px,0px)"
+        }
+      ],
+      "options": {
+        "fill": "both",
+        "duration": 200,
+        "easing": "cubic-bezier(.2,0,0,1)"
+      }
+    },
+    {
+      "element": "div",
+      "keyframes": [
+        {
+          "transform": "translate(250px,214px)"
+        }
+      ],
+      "options": {
+        "fill": "both",
+        "duration": 182.5,
+        "easing": "cubic-bezier(.2,1,.1,1)"
+      }
+    },
+    {
+      "element": "li[data-testid=\"item-2\"]",
+      "keyframes": [
+        {
+          "transform": "scale(1.1)"
+        }
+      ],
+      "options": {
+        "fill": "forwards",
+        "duration": 250
+      }
+    },
+    {
+      "element": "li[data-testid=\"item-0\"]",
+      "keyframes": [
+        {
+          "transform": "translate(0px,-50px)"
+        },
+        {
+          "transform": "translate(0px,0px)"
+        }
+      ],
+      "options": {
+        "fill": "both",
+        "duration": 200,
+        "easing": "cubic-bezier(.2,0,0,1)"
+      }
+    },
+    {
+      "element": "div",
+      "keyframes": [
+        {
+          "transform": "translate(250px,214px)"
+        }
+      ],
+      "options": {
+        "fill": "both",
+        "duration": 181,
+        "easing": "cubic-bezier(.2,1,.1,1)"
+      }
+    },
+    {
+      "element": "li[data-testid=\"item-0\"]",
+      "keyframes": [
+        {
+          "transform": "scale(1.1)"
+        }
+      ],
+      "options": {
+        "fill": "forwards",
+        "duration": 250
+      }
+    },
+    {
+      "element": "li[data-testid=\"item-3\"]",
+      "keyframes": [
+        {
+          "transform": "translate(0px,70px)"
+        },
+        {
+          "transform": "translate(0px,0px)"
+        }
+      ],
+      "options": {
+        "fill": "both",
+        "duration": 200,
+        "easing": "cubic-bezier(.2,0,0,1)"
+      }
+    },
+    {
+      "element": "div",
+      "keyframes": [
+        {
+          "transform": "translate(250px,374px)"
+        }
+      ],
+      "options": {
+        "fill": "both",
+        "duration": 184,
+        "easing": "cubic-bezier(.2,1,.1,1)"
+      }
+    }
+  ],
+  "can leave and reenter": [
+    {
+      "element": "li[data-testid=\"item-3\"]",
+      "keyframes": [
+        {
+          "transform": "scale(1.1)"
+        }
+      ],
+      "options": {
+        "fill": "forwards",
+        "duration": 250
+      }
+    },
+    {
+      "element": "li[data-testid=\"item-2\"]",
+      "keyframes": [
+        {
+          "transform": "translate(0px,-110px)"
+        },
+        {
+          "transform": "translate(0px,0px)"
+        }
+      ],
+      "options": {
+        "fill": "both",
+        "duration": 200,
+        "easing": "cubic-bezier(.2,0,0,1)"
+      }
+    },
+    {
+      "element": "div",
+      "keyframes": [
+        {
+          "transform": "translate(250px,284px)"
+        }
+      ],
+      "options": {
+        "fill": "both",
+        "duration": 185,
+        "easing": "cubic-bezier(.2,1,.1,1)"
+      }
+    }
+  ]
+}

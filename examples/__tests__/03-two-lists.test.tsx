@@ -1,5 +1,10 @@
-import { mockAnimations, simulateDrag } from "@lib/__tests__/testUtils"
-import { getAllByRole, render } from "@testing-library/react"
+import {
+  mockAnimations,
+  nextFrame,
+  orderByVisualHeight,
+  simulateDrag,
+} from "@lib/__tests__/testUtils"
+import { fireEvent, getAllByRole, render } from "@testing-library/react"
 import chai, { expect } from "chai"
 import chaiDom from "chai-dom"
 import * as React from "react"
@@ -118,6 +123,37 @@ describe("two-lists", () => {
 
     expect(itemsLeft).to.deep.equal(["item-1", "item-5", "item-2", "item-3"])
     expect(itemsRight).to.deep.equal(["item-4", "item-0", "item-6", "item-7"])
+    await expect(animations.animations).to.matchSnapshot()
+  })
+
+  it("can leave and reenter the same list", async () => {
+    const animations = mockAnimations()
+    const { getByTestId } = render(<Example />)
+
+    const end = await simulateDrag(
+      getByTestId("item-3"),
+      [
+        { x: -500, y: 0 },
+        { x: 0, y: -100 },
+        { x: 500, y: 0 },
+      ],
+      { release: false },
+    )
+
+    let items = getAllByRole(document.body, "listitem")
+      .filter((li) => +li.dataset.testid!.replace("item-", "") < 4)
+      .sort(orderByVisualHeight)
+      .map((li) => li.dataset.testid)
+    expect(items).to.deep.equal(["item-0", "item-1", "item-3", "item-2"])
+
+    fireEvent.pointerUp(window, end)
+    await nextFrame()
+
+    items = getAllByRole(getByTestId("list-left"), "listitem").map(
+      (li) => li.dataset.testid,
+    )
+    expect(items).to.deep.equal(["item-0", "item-1", "item-3", "item-2"])
+
     await expect(animations.animations).to.matchSnapshot()
   })
 })

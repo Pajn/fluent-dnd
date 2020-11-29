@@ -5,4 +5,5 @@ build
 /lib
 web_modules
 node_modules
-/test-data
+/test-data/changed-snapshots
+/test-data/screenshots

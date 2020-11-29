@@ -221,12 +221,13 @@ export const SortableList = <
       const dragInfo = OngoingDrag.getData(drag, listInfo)
       if (dragInfo === undefined) return
       const dragItem = itemType && OngoingDrag.getData(drag, itemType)
-      if (dragItem === undefined) return
 
       OngoingDrag.setData(drag, listInfo, {
         ...dragInfo,
         currentListId: listId,
       })
+
+      if (dragItem === undefined) return
 
       if (dragInfo.startListId === listId) {
         // The normal sorting operation clears the deletedItem so we
@@ -248,7 +249,19 @@ export const SortableList = <
         })
       }
 
-      if (dragItem !== undefined && dragInfo.startListId === listId) {
+      if (dragItem === undefined) {
+        setSortingState({
+          orderUpdate: Date.now(),
+          workingItems: items.map((item, index) => ({
+            type: "item",
+            item,
+            startIndex: index,
+          })),
+        })
+        return
+      }
+
+      if (dragInfo.startListId === listId) {
         const itemIndex = controller.findItemIndex(dragInfo, dragItem)
         setSortingState((state) => ({
           ...state,
@@ -261,23 +274,12 @@ export const SortableList = <
           },
         }))
       } else {
-        if (dragItem === undefined) {
-          setSortingState({
-            orderUpdate: Date.now(),
-            workingItems: items.map((item, index) => ({
-              type: "item",
-              item,
-              startIndex: index,
-            })),
-          })
-        } else {
-          setSortingState((state) => ({
-            orderUpdate: Date.now(),
-            workingItems: state.workingItems?.filter(
-              (item) => !(item.type === "spacer" && item.dragItem === dragItem),
-            ),
-          }))
-        }
+        setSortingState((state) => ({
+          orderUpdate: Date.now(),
+          workingItems: state.workingItems?.filter(
+            (item) => !(item.type === "spacer" && item.dragItem === dragItem),
+          ),
+        }))
       }
     },
     onDragMoveOver(drag, point) {

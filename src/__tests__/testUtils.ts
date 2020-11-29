@@ -1,3 +1,4 @@
+import type { Point } from "@lib/geometry"
 import { fireEvent } from "@testing-library/react"
 import { executeServerCommand } from "@web/test-runner-commands"
 import chai from "chai"
@@ -7,21 +8,37 @@ export const nextFrame = () =>
     requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
   )
 
+export const orderByVisualHeight = (a: HTMLElement, b: HTMLElement) =>
+  a.getBoundingClientRect().top - b.getBoundingClientRect().top
+
+function elementDescription(element: Element) {
+  let description = element.nodeName.toLocaleLowerCase()
+  if (element instanceof HTMLElement) {
+    if (element.dataset.testid) {
+      description += `[data-testid="${element.dataset.testid}"]`
+    }
+  }
+  return description
+}
+
 export async function simulateDrag(
   target: Element,
-  offset: { x: number; y: number },
-  { steps = 10, debug = false } = {},
+  offset: Point | Array<Point>,
+  { steps = 10, debug = false, release = true } = {},
 ) {
+  const offsets = Array.isArray(offset) ? offset : [offset]
+  const lastOffset = offsets[offsets.length - 1]
+
   const targetPos = target.getBoundingClientRect()
   const pointerStart = {
     x: targetPos.left + targetPos.width / 2,
     y: targetPos.top + targetPos.height / 2,
   }
   if (debug) {
-    console.log(
-      `Drag from ${pointerStart.x}, ${pointerStart.y} to ${
-        pointerStart.x + offset.x
-      }, ${pointerStart.y + offset.y}`,
+    console.debug(
+      `Drag start ${pointerStart.x}, ${pointerStart.y}, ${elementDescription(
+        target,
+      )}`,
     )
   }
 
@@ -30,25 +47,55 @@ export async function simulateDrag(
     clientY: pointerStart.y,
   })
   await nextFrame()
-  for (let step = 0; step < steps; step++) {
-    const percentage = Math.min(step / steps, 1)
+  let startPoint = pointerStart
+  for (const offset of offsets) {
+    for (let step = 0; step < steps; step++) {
+      const percentage = Math.min(step / steps, 1)
 
+      fireEvent.pointerMove(window, {
+        clientX: startPoint.x + offset.x * percentage,
+        clientY: startPoint.y + offset.y * percentage,
+      })
+      await nextFrame()
+    }
     fireEvent.pointerMove(window, {
-      clientX: pointerStart.x + offset.x * percentage,
-      clientY: pointerStart.y + offset.y * percentage,
+      clientX: startPoint.x + offset.x,
+      clientY: startPoint.y + offset.y,
     })
+    if (debug) {
+      console.debug(
+        `Drag stop ${startPoint.x + offset.x}, ${
+          startPoint.y + offset.y
+        }, ${elementDescription(target)}`,
+      )
+    }
+    await nextFrame()
+    if (offset !== lastOffset) {
+      startPoint = {
+        x: startPoint.x + offset.x,
+        y: startPoint.y + offset.y,
+      }
+    }
+  }
+
+  if (release) {
+    fireEvent.pointerUp(window, {
+      clientX: startPoint.x + lastOffset.x,
+      clientY: startPoint.y + lastOffset.y,
+    })
+    if (debug) {
+      console.debug(
+        `Drag end ${startPoint.x + lastOffset.x}, ${
+          startPoint.y + lastOffset.y
+        }, ${elementDescription(target)}`,
+      )
+    }
     await nextFrame()
   }
-  fireEvent.pointerMove(window, {
-    clientX: pointerStart.x + offset.x,
-    clientY: pointerStart.y + offset.y,
-  })
-  await nextFrame()
-  fireEvent.pointerUp(window, {
-    clientX: pointerStart.x + offset.x,
-    clientY: pointerStart.y + offset.y,
-  })
-  await nextFrame()
+  return {
+    clientX: startPoint.x + lastOffset.x,
+    clientY: startPoint.y + lastOffset.y,
+  }
 }
 
 class MockAnimation extends Animation {
@@ -80,16 +127,14 @@ export function mockAnimations() {
   }
 
   Element.prototype.animate = function (keyframes, options) {
-    let element = this.nodeName.toLocaleLowerCase()
-    if (this instanceof HTMLElement) {
-      if (this.dataset.testid) {
-        element += `[data-testid="${this.dataset.testid}"]`
-      }
-    }
     if (typeof options === "number") {
       options = { duration: options }
     }
-    controller.animations.push({ element, keyframes, options })
+    controller.animations.push({
+      element: elementDescription(this),
+      keyframes,
+      options,
+    })
     return new MockAnimation()
   }
 
