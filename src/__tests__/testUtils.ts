@@ -112,17 +112,18 @@ beforeEach(function () {
   testName = this.test?.title.replace(/^"before each" hook for "(.*?)"/, "$1")
 })
 
-chai.util.addMethod(chai.Assertion.prototype, "matchSnapshot", async function (
-  this: any,
-  options?: SnapshotOptions,
-) {
-  const data = chai.util.flag(this, "object")
-  const response = (await executeServerCommand("take-snapshot", {
-    name: options?.name ?? testName,
-    data,
-  })) as any
-  new chai.Assertion(data).to.deep.equal(response.content)
-})
+chai.util.addMethod(
+  chai.Assertion.prototype,
+  "matchSnapshot",
+  async function (this: any, options?: SnapshotOptions) {
+    const data = chai.util.flag(this, "object")
+    const response = (await executeServerCommand("take-snapshot", {
+      name: options?.name ?? testName,
+      data,
+    })) as any
+    new chai.Assertion(data).to.deep.equal(response.content)
+  },
+)
 
 declare global {
   namespace Chai {
