@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Drag and drop library for react with beautiful animations",
   "repository": "Pajn/fluent-dnd",
-  "homepage": "https://pajn.github.io/fluent-dnd/",
+  "homepage": "https://fluent-dnd.vercel.app/",
   "author": "Rasmus Eneman <rasmus@eneman.eu>",
   "main": "cjs/index.js",
   "module": "lib/index.js",
