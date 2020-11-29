@@ -1,0 +1,68 @@
+{
+  "name": "fluent-dnd",
+  "version": "0.1.0",
+  "description": "Drag and drop library for react with beautiful animations",
+  "repository": "Pajn/fluent-dnd",
+  "homepage": "https://pajn.github.io/fluent-dnd/",
+  "author": "Rasmus Eneman <rasmus@eneman.eu>",
+  "main": "cjs/index.js",
+  "module": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "files": [
+    "cjs",
+    "lib",
+    "!/**/__tests__"
+  ],
+  "scripts": {
+    "start": "snowpack dev",
+    "build": "yarn build::esm && yarn build::cjs",
+    "build::esm": "tsc --build tsconfig.build.json",
+    "build::cjs": "tsc --build tsconfig.build-cjs.json",
+    "build-docs": "snowpack build",
+    "test": "web-test-runner \"{examples,src}/**/*.test.tsx\"",
+    "format": "prettier --write \"{examples,src}/**/*.{js,jsx,ts,tsx}\"",
+    "format::check": "prettier --check \"{examples,src}/**/*.{js,jsx,ts,tsx}\"",
+    "validate": "yarn format::check && yarn build::esm && yarn test",
+    "prepublishOnly": "yarn validate"
+  },
+  "dependencies": {
+    "@reach/portal": "^0.11.2",
+    "array-move": "^3.0.1"
+  },
+  "peerDependencies": {
+    "react": ">=16.8",
+    "react-dom": ">=16.8"
+  },
+  "devDependencies": {
+    "@snowpack/plugin-react-refresh": "^2.3.7",
+    "@snowpack/plugin-typescript": "^1.1.0",
+    "@snowpack/web-test-runner-plugin": "^0.1.4",
+    "@testing-library/react": "^11.0.0",
+    "@types/chai": "^4.2.13",
+    "@types/chai-dom": "^0.0.10",
+    "@types/react": "^16.9.49",
+    "@types/react-dom": "^16.9.8",
+    "@types/snowpack-env": "^2.3.2",
+    "@web/test-runner": "^0.9.7",
+    "@web/test-runner-commands": "^0.2.1",
+    "chai": "^4.2.0",
+    "chai-dom": "^1.8.2",
+    "eslint-config-react-app": "^6.0.0",
+    "focus-visible": "^5.2.0",
+    "history": "5",
+    "prettier": "^2.0.5",
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0",
+    "react-router": "^6.0.0-beta.0",
+    "react-router-dom": "^6.0.0-beta.0",
+    "snowpack": "^2.17.1",
+    "typescript": "^4.0.0"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "prettier": {
+    "semi": false,
+    "trailingComma": "all"
+  }
+}

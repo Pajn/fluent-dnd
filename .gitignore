@@ -1,0 +1,8 @@
+.build
+.temp
+build
+/cjs
+/lib
+web_modules
+node_modules
+/test-data
