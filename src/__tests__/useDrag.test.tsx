@@ -34,11 +34,13 @@ describe("useDrag", () => {
 
     expect(dragitem).to.have.text("")
     fireEvent.pointerDown(dragitem, {
+      buttons: 1,
       clientX: 0,
       clientY: 0,
     })
     await nextFrame()
     fireEvent.pointerMove(dragitem, {
+      buttons: 1,
       clientX: 10,
       clientY: 10,
     })
@@ -48,6 +50,7 @@ describe("useDrag", () => {
     expect(dragitem).to.contain.text("isLifted")
 
     fireEvent.pointerUp(dragitem, {
+      buttons: 1,
       clientX: 10,
       clientY: 10,
     })

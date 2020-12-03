@@ -51,6 +51,7 @@ export async function simulateDrag(
   }
 
   fireEvent.pointerDown(target, {
+    buttons: 1,
     clientX: pointerStart.x,
     clientY: pointerStart.y,
   })
@@ -61,12 +62,14 @@ export async function simulateDrag(
       const percentage = Math.min(step / steps, 1)
 
       fireEvent.pointerMove(document.body, {
+        buttons: 1,
         clientX: startPoint.x + offset.x * percentage,
         clientY: startPoint.y + offset.y * percentage,
       })
       await nextFrame()
     }
     fireEvent.pointerMove(document.body, {
+      buttons: 1,
       clientX: startPoint.x + offset.x,
       clientY: startPoint.y + offset.y,
     })
@@ -88,6 +91,7 @@ export async function simulateDrag(
 
   if (release) {
     fireEvent.pointerUp(document.body, {
+      buttons: 1,
       clientX: startPoint.x + lastOffset.x,
       clientY: startPoint.y + lastOffset.y,
     })
@@ -101,6 +105,7 @@ export async function simulateDrag(
     await nextFrame()
   }
   return {
+    buttons: 1,
     clientX: startPoint.x + lastOffset.x,
     clientY: startPoint.y + lastOffset.y,
   }
