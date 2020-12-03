@@ -4,6 +4,25 @@ import { getBoundingClientRectIgnoringTransforms, Point } from "./geometry"
 import { useConstant, useLatest } from "./util"
 import { ObservableValue } from "./value"
 
+function getPoint(event: { clientX: number; clientY: number }): Point {
+  return {
+    x: event.clientX,
+    y: event.clientY,
+  }
+}
+
+function getTouch(touchList: TouchList, identifier: number) {
+  for (let i = 0; i < touchList.length; i++) {
+    const touch = touchList.item(i)
+    if (touch!.identifier === identifier) return touch!
+  }
+}
+
+function getPointerOffset(element: HTMLElement, startPoint: Point) {
+  const rect = getBoundingClientRectIgnoringTransforms(element)
+  return Point.diff(startPoint, rect)
+}
+
 export function useDrag(dragOptions?: {
   onDragStart?: (drag: OngoingDrag, point: Point) => void
   onDragMove?: (drag: OngoingDrag, point: Point) => void
@@ -19,6 +38,48 @@ export function useDrag(dragOptions?: {
     const isDragging = new ObservableValue(false)
     ongoingDrag.onChange.subscribe((drag) => isDragging.set(drag !== undefined))
 
+    function createDragController(ongoingDrag: OngoingDrag) {
+      return {
+        start(point: Point) {
+          ongoingDrag.enteredDropZone.subscribe(() => {
+            controller.inDropZone.set(true)
+          })
+          ongoingDrag.leftDropZone.subscribe(() => {
+            controller.inDropZone.set(false)
+          })
+          ongoingDrag.droppedInDropZone.subscribe(() => {
+            options.current?.onDragDropped?.(ongoingDrag)
+          })
+
+          controller.ongoingDrag.set(ongoingDrag)
+          options.current?.onDragStart?.(ongoingDrag, point)
+          context.dragStart.fire(ongoingDrag)
+        },
+
+        move(point: Point, event: PointerEvent | TouchEvent) {
+          ongoingDrag.lastPoint.set(point)
+          options.current?.onDragMove?.(ongoingDrag, point)
+          ongoingDrag.dragMove.fire({ event, point })
+        },
+
+        end(point: Point, event: PointerEvent | TouchEvent) {
+          controller.ongoingDrag.set(undefined)
+          controller.inDropZone.set(false)
+
+          options.current?.onDragEnd?.(ongoingDrag, point)
+          ongoingDrag.dragEnd.fire({ event: event, point })
+        },
+
+        cancel(point: Point, event: PointerEvent | TouchEvent) {
+          controller.ongoingDrag.set(undefined)
+          controller.inDropZone.set(false)
+
+          options.current?.onDragCancel?.(ongoingDrag, point)
+          ongoingDrag.dragCancel.fire({ event: event, point })
+        },
+      }
+    }
+
     return {
       isMounted: true,
       ongoingDrag,
@@ -29,6 +90,14 @@ export function useDrag(dragOptions?: {
         // Only react to the primary mouse button
         if (startEvent.buttons !== 1) return
         const pointerId = startEvent.pointerId
+
+        if (startEvent.currentTarget.hasPointerCapture(pointerId)) {
+          // Touch devices does an implicit pointer capture on the
+          // touched elements which breaks when it's then moved into a
+          // portal. Instead we track then using touch events.
+          return
+        }
+
         startEvent.preventDefault()
         startEvent.stopPropagation()
 
@@ -45,90 +114,101 @@ export function useDrag(dragOptions?: {
           fill: "both",
         })
 
-        const startPoint = {
-          x: startEvent.clientX,
-          y: startEvent.clientY,
-        }
+        const startPoint = getPoint(startEvent)
 
-        const rect = getBoundingClientRectIgnoringTransforms(
-          startEvent.currentTarget as HTMLElement,
+        const dragController = createDragController(
+          OngoingDrag.create({
+            startPoint,
+            pointerOffset: getPointerOffset(
+              startEvent.currentTarget,
+              startPoint,
+            ),
+          }),
         )
-
-        const ongoingDrag = OngoingDrag.create({
-          startPoint,
-          pointerOffset: Point.diff(startPoint, rect),
-        })
-
-        controller.ongoingDrag.set(ongoingDrag)
 
         function moveListener(event: PointerEvent) {
           if (event.pointerId !== pointerId) return
-          const point = {
-            x: event.clientX,
-            y: event.clientY,
-          }
 
-          ongoingDrag.lastPoint.set(point)
-          options.current?.onDragMove?.(ongoingDrag, point)
-          ongoingDrag.dragMove.fire({ event, point })
+          dragController.move(getPoint(event), event)
         }
-        function stopDrag() {
+        function upListener(event: PointerEvent) {
+          if (event.pointerId !== pointerId) return
+
+          removeEvents()
+          dragController.end(getPoint(event), event)
+        }
+        function cancelListener(event: PointerEvent) {
+          if (event.pointerId !== pointerId) return
+
+          removeEvents()
+          dragController.cancel(getPoint(event), event)
+        }
+        function removeEvents() {
           document.body.removeEventListener("pointermove", moveListener)
           document.body.removeEventListener("pointerup", upListener)
           document.body.removeEventListener("pointercancel", cancelListener)
 
-          controller.ongoingDrag.set(undefined)
-          controller.inDropZone.set(false)
           bodyCursor.cancel()
-        }
-        function upListener(event: PointerEvent) {
-          if (event.pointerId !== pointerId) return
-          stopDrag()
-
-          const point = {
-            x: event.clientX,
-            y: event.clientY,
-          }
-
-          options.current?.onDragEnd?.(ongoingDrag, point)
-          ongoingDrag.dragEnd.fire({ event: event, point })
-        }
-        function cancelListener(event: PointerEvent) {
-          if (event.pointerId !== pointerId) return
-          stopDrag()
-
-          const point = {
-            x: event.clientX,
-            y: event.clientY,
-          }
-
-          options.current?.onDragCancel?.(ongoingDrag, point)
-          ongoingDrag.dragCancel.fire({ event: event, point })
         }
         document.body.addEventListener("pointermove", moveListener)
         document.body.addEventListener("pointerup", upListener)
         document.body.addEventListener("pointercancel", cancelListener)
 
-        ongoingDrag.enteredDropZone.subscribe(() => {
-          controller.inDropZone.set(true)
-        })
-        ongoingDrag.leftDropZone.subscribe(() => {
-          controller.inDropZone.set(false)
-        })
-        ongoingDrag.droppedInDropZone.subscribe(() => {
-          options.current?.onDragDropped?.(ongoingDrag)
-        })
+        dragController.start(startPoint)
+      },
+      onTouchStart(startEvent: React.TouchEvent<HTMLElement>) {
+        const element = startEvent.currentTarget
+        const touchId = startEvent.changedTouches[0].identifier
 
-        options.current?.onDragStart?.(ongoingDrag, startPoint)
-        context.dragStart.fire(ongoingDrag)
+        const startPoint = getPoint(startEvent.changedTouches[0])
+
+        const dragController = createDragController(
+          OngoingDrag.create({
+            startPoint,
+            pointerOffset: getPointerOffset(element, startPoint),
+          }),
+        )
+
+        function moveListener(event: TouchEvent) {
+          const touch = getTouch(event.changedTouches, touchId)
+          if (touch === undefined) return
+
+          dragController.move(getPoint(touch), event)
+        }
+        function upListener(event: TouchEvent) {
+          const touch = getTouch(event.changedTouches, touchId)
+          if (touch === undefined) return
+
+          removeEvents()
+          dragController.end(getPoint(touch), event)
+        }
+        function cancelListener(event: TouchEvent) {
+          const touch = getTouch(event.changedTouches, touchId)
+          if (touch === undefined) return
+
+          removeEvents()
+          dragController.cancel(getPoint(touch), event)
+        }
+        function removeEvents() {
+          element.removeEventListener("touchmove", moveListener)
+          element.removeEventListener("touchend", upListener)
+          element.removeEventListener("touchcancel", cancelListener)
+        }
+        element.addEventListener("touchmove", moveListener)
+        element.addEventListener("touchend", upListener)
+        element.addEventListener("touchcancel", cancelListener)
+
+        dragController.start(startPoint)
       },
     }
   })
 
   const props = {
     onPointerDown: controller.onPointerDown,
+    onTouchStart: controller.onTouchStart,
     style: {
       cursor: "grab",
+      touchAction: "none",
     } as const,
   }
   // typecheck
