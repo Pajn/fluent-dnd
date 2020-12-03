@@ -26,6 +26,8 @@ export function useDrag(dragOptions?: {
       inDropZone: new ObservableValue(false),
 
       onPointerDown(startEvent: React.PointerEvent<HTMLElement>) {
+        // Only react to the primary mouse button
+        if (startEvent.buttons !== 1) return
         const pointerId = startEvent.pointerId
         startEvent.preventDefault()
         startEvent.stopPropagation()
