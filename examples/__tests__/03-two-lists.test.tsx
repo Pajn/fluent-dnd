@@ -146,7 +146,7 @@ describe("two-lists", () => {
       .map((li) => li.dataset.testid)
     expect(items).to.deep.equal(["item-0", "item-1", "item-3", "item-2"])
 
-    fireEvent.pointerUp(window, end)
+    fireEvent.pointerUp(document.body, end)
     await nextFrame()
 
     items = getAllByRole(getByTestId("list-left"), "listitem").map(

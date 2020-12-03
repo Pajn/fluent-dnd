@@ -33,7 +33,6 @@ export const DndProvider = (props: { children: ReactNode }) => {
 }
 
 export type OngoingDrag = Readonly<{
-  element: HTMLElement
   startPoint: Readonly<Point>
   pointerOffset: Readonly<Point>
   lastPoint: ObservableValue<Point>
@@ -58,9 +57,7 @@ export type OngoingDrag = Readonly<{
 }>
 
 export const OngoingDrag = {
-  create(
-    base: Pick<OngoingDrag, "element" | "startPoint" | "pointerOffset">,
-  ): OngoingDrag {
+  create(base: Pick<OngoingDrag, "startPoint" | "pointerOffset">): OngoingDrag {
     return {
       ...base,
       lastPoint: new ObservableValue(base.startPoint),

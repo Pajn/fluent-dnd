@@ -1,6 +1,18 @@
 {
   "can drag an item down": [
     {
+      "element": "body",
+      "keyframes": [
+        {
+          "cursor": "grabbing"
+        }
+      ],
+      "options": {
+        "duration": 0,
+        "fill": "both"
+      }
+    },
+    {
       "element": "li[data-testid=\"item-1\"]",
       "keyframes": [
         {
@@ -43,6 +55,18 @@
     }
   ],
   "can drag an item up": [
+    {
+      "element": "body",
+      "keyframes": [
+        {
+          "cursor": "grabbing"
+        }
+      ],
+      "options": {
+        "duration": 0,
+        "fill": "both"
+      }
+    },
     {
       "element": "li[data-testid=\"item-3\"]",
       "keyframes": [
@@ -103,6 +127,18 @@
   ],
   "can drag multiple times": [
     {
+      "element": "body",
+      "keyframes": [
+        {
+          "cursor": "grabbing"
+        }
+      ],
+      "options": {
+        "duration": 0,
+        "fill": "both"
+      }
+    },
+    {
       "element": "li[data-testid=\"item-0\"]",
       "keyframes": [
         {
@@ -144,6 +180,18 @@
       }
     },
     {
+      "element": "body",
+      "keyframes": [
+        {
+          "cursor": "grabbing"
+        }
+      ],
+      "options": {
+        "duration": 0,
+        "fill": "both"
+      }
+    },
+    {
       "element": "li[data-testid=\"item-2\"]",
       "keyframes": [
         {
@@ -182,6 +230,18 @@
         "fill": "both",
         "duration": 181,
         "easing": "cubic-bezier(.2,1,.1,1)"
+      }
+    },
+    {
+      "element": "body",
+      "keyframes": [
+        {
+          "cursor": "grabbing"
+        }
+      ],
+      "options": {
+        "duration": 0,
+        "fill": "both"
       }
     },
     {
@@ -227,6 +287,18 @@
     }
   ],
   "can leave and reenter": [
+    {
+      "element": "body",
+      "keyframes": [
+        {
+          "cursor": "grabbing"
+        }
+      ],
+      "options": {
+        "duration": 0,
+        "fill": "both"
+      }
+    },
     {
       "element": "li[data-testid=\"item-3\"]",
       "keyframes": [

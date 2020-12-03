@@ -1,7 +1,7 @@
 import { DndProvider } from "@lib/context"
 import { useDraggable } from "@lib/useDraggable"
 import { useObserveValue } from "@lib/value"
-import { nextFrame } from "@lib/__tests__/testUtils"
+import { mockPointerCapture, nextFrame } from "@lib/__tests__/testUtils"
 import { fireEvent, render } from "@testing-library/react"
 import chai, { expect } from "chai"
 import chaiDom from "chai-dom"
@@ -11,6 +11,7 @@ chai.use(chaiDom)
 
 describe("useDrag", () => {
   it("returns correct dragging status", async () => {
+    mockPointerCapture()
     const Component = () => {
       const draggable = useDraggable()
       const isDragging = useObserveValue(draggable.isDragging)

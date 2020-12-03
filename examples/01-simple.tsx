@@ -61,7 +61,6 @@ const DragItem = (props: { setMessage: (message: string) => void }) => {
       }
     },
   })
-  const isDragging = useObserveValue(draggable.isDragging)
   const overDropZone = useObserveValue(draggable.inDropZone)
 
   useEffect(() => {
@@ -84,9 +83,8 @@ const DragItem = (props: { setMessage: (message: string) => void }) => {
       {...draggable.props}
       style={{
         ...dragItemStyles,
+        ...draggable.props.style,
         opacity: overDropZone ? 0.7 : 1,
-        cursor: isDragging ? "move" : "grab",
-        pointerEvents: "auto",
         transition: "opacity 200ms linear",
       }}
     >

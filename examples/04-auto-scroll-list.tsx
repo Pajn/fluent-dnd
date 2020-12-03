@@ -44,7 +44,7 @@ const ListItem = (props: { item: Item }) => {
     <li
       data-testid={`item-${props.item.id}`}
       {...listItem.props}
-      style={{ ...listItemStyles }}
+      style={{ ...listItemStyles, ...listItem.props.style }}
     >
       Item {props.item.id + 1}
     </li>,

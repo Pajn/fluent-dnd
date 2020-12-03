@@ -21,11 +21,19 @@ function elementDescription(element: Element) {
   return description
 }
 
+function noOp() {}
+
+export function mockPointerCapture() {
+  Element.prototype.setPointerCapture = noOp
+}
+
 export async function simulateDrag(
   target: Element,
   offset: Point | Array<Point>,
   { steps = 10, debug = false, release = true } = {},
 ) {
+  mockPointerCapture()
+
   const offsets = Array.isArray(offset) ? offset : [offset]
   const lastOffset = offsets[offsets.length - 1]
 
@@ -52,13 +60,13 @@ export async function simulateDrag(
     for (let step = 0; step < steps; step++) {
       const percentage = Math.min(step / steps, 1)
 
-      fireEvent.pointerMove(window, {
+      fireEvent.pointerMove(document.body, {
         clientX: startPoint.x + offset.x * percentage,
         clientY: startPoint.y + offset.y * percentage,
       })
       await nextFrame()
     }
-    fireEvent.pointerMove(window, {
+    fireEvent.pointerMove(document.body, {
       clientX: startPoint.x + offset.x,
       clientY: startPoint.y + offset.y,
     })
@@ -79,7 +87,7 @@ export async function simulateDrag(
   }
 
   if (release) {
-    fireEvent.pointerUp(window, {
+    fireEvent.pointerUp(document.body, {
       clientX: startPoint.x + lastOffset.x,
       clientY: startPoint.y + lastOffset.y,
     })

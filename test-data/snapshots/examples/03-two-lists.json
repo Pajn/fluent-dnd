@@ -1,6 +1,18 @@
 {
   "can drag an item down": [
     {
+      "element": "body",
+      "keyframes": [
+        {
+          "cursor": "grabbing"
+        }
+      ],
+      "options": {
+        "duration": 0,
+        "fill": "both"
+      }
+    },
+    {
       "element": "li[data-testid=\"item-5\"]",
       "keyframes": [
         {
@@ -31,6 +43,18 @@
     }
   ],
   "can drag an item up": [
+    {
+      "element": "body",
+      "keyframes": [
+        {
+          "cursor": "grabbing"
+        }
+      ],
+      "options": {
+        "duration": 0,
+        "fill": "both"
+      }
+    },
     {
       "element": "li[data-testid=\"item-2\"]",
       "keyframes": [
@@ -78,6 +102,18 @@
     }
   ],
   "can drag an item to the right": [
+    {
+      "element": "body",
+      "keyframes": [
+        {
+          "cursor": "grabbing"
+        }
+      ],
+      "options": {
+        "duration": 0,
+        "fill": "both"
+      }
+    },
     {
       "element": "li[data-testid=\"item-6\"]",
       "keyframes": [
@@ -174,6 +210,18 @@
   ],
   "can drag an item to the left": [
     {
+      "element": "body",
+      "keyframes": [
+        {
+          "cursor": "grabbing"
+        }
+      ],
+      "options": {
+        "duration": 0,
+        "fill": "both"
+      }
+    },
+    {
       "element": "li[data-testid=\"item-2\"]",
       "keyframes": [
         {
@@ -252,6 +300,18 @@
     }
   ],
   "can drag multiple times": [
+    {
+      "element": "body",
+      "keyframes": [
+        {
+          "cursor": "grabbing"
+        }
+      ],
+      "options": {
+        "duration": 0,
+        "fill": "both"
+      }
+    },
     {
       "element": "li[data-testid=\"item-4\"]",
       "keyframes": [
@@ -394,6 +454,18 @@
       }
     },
     {
+      "element": "body",
+      "keyframes": [
+        {
+          "cursor": "grabbing"
+        }
+      ],
+      "options": {
+        "duration": 0,
+        "fill": "both"
+      }
+    },
+    {
       "element": "li[data-testid=\"item-0\"]",
       "keyframes": [
         {
@@ -487,6 +559,18 @@
       }
     },
     {
+      "element": "body",
+      "keyframes": [
+        {
+          "cursor": "grabbing"
+        }
+      ],
+      "options": {
+        "duration": 0,
+        "fill": "both"
+      }
+    },
+    {
       "element": "li[data-testid=\"item-5\"]",
       "keyframes": [
         {
@@ -513,6 +597,18 @@
         "fill": "both",
         "duration": 181.5,
         "easing": "cubic-bezier(.2,1,.1,1)"
+      }
+    },
+    {
+      "element": "body",
+      "keyframes": [
+        {
+          "cursor": "grabbing"
+        }
+      ],
+      "options": {
+        "duration": 0,
+        "fill": "both"
       }
     },
     {
@@ -606,6 +702,18 @@
         "fill": "both",
         "duration": 190.11187420807835,
         "easing": "cubic-bezier(.2,1,.1,1)"
+      }
+    },
+    {
+      "element": "body",
+      "keyframes": [
+        {
+          "cursor": "grabbing"
+        }
+      ],
+      "options": {
+        "duration": 0,
+        "fill": "both"
       }
     },
     {
@@ -734,6 +842,18 @@
       }
     },
     {
+      "element": "body",
+      "keyframes": [
+        {
+          "cursor": "grabbing"
+        }
+      ],
+      "options": {
+        "duration": 0,
+        "fill": "both"
+      }
+    },
+    {
       "element": "li[data-testid=\"item-3\"]",
       "keyframes": [
         {
@@ -780,6 +900,18 @@
     }
   ],
   "can leave and reenter the same list": [
+    {
+      "element": "body",
+      "keyframes": [
+        {
+          "cursor": "grabbing"
+        }
+      ],
+      "options": {
+        "duration": 0,
+        "fill": "both"
+      }
+    },
     {
       "element": "li[data-testid=\"item-2\"]",
       "keyframes": [

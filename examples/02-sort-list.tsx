@@ -41,6 +41,7 @@ const ListItem = (props: { item: Item }) => {
       {...listItem.props}
       style={{
         ...listItemStyles,
+        ...listItem.props.style,
         height: props.item.height,
         backgroundColor: props.item.color,
       }}
