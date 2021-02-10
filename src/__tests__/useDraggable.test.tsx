@@ -1,6 +1,5 @@
 import { DndProvider } from "@lib/context"
 import { useDraggable } from "@lib/useDraggable"
-import { useObserveValue } from "@lib/value"
 import { mockPointerCapture, nextFrame } from "@lib/__tests__/testUtils"
 import { fireEvent, render } from "@testing-library/react"
 import chai, { expect } from "chai"
@@ -9,30 +8,33 @@ import React from "react"
 
 chai.use(chaiDom)
 
-describe("useDrag", () => {
-  it("returns correct dragging status", async () => {
+describe("useDraggable", () => {
+  it("sets the size of the dragging container element", async () => {
     mockPointerCapture()
     const Component = () => {
       const draggable = useDraggable()
-      const isDragging = useObserveValue(draggable.isDragging)
 
       return draggable.mapChildren(
-        <div {...draggable.props} data-testid="dragitem">
-          {isDragging && "isDragging"}
-          <br />
-          {draggable.isLifted && "isLifted"}
+        <div
+          {...draggable.props}
+          style={{ ...draggable.props.style, width: "100%", height: "100%" }}
+          data-testid="dragitem"
+        >
+          Draggable {draggable.isLifted ? "lifted" : "not lifted"}{" "}
+          {draggable.isLifted.toString()}
         </div>,
       )
     }
 
     const { getByTestId } = render(
       <DndProvider>
-        <Component />
+        <div style={{ width: 200, height: 100 }}>
+          <Component />
+        </div>
       </DndProvider>,
     )
     let dragitem = getByTestId("dragitem")
 
-    expect(dragitem).to.have.text("")
     fireEvent.pointerDown(dragitem, {
       buttons: 1,
       clientX: 0,
@@ -48,15 +50,7 @@ describe("useDrag", () => {
 
     dragitem = getByTestId("dragitem")
 
-    expect(dragitem).to.contain.text("isDragging")
-    expect(dragitem).to.contain.text("isLifted")
-
-    fireEvent.pointerUp(dragitem, {
-      buttons: 1,
-      clientX: 10,
-      clientY: 10,
-    })
-    expect(dragitem).to.not.contain.text("isDragging")
-    expect(dragitem).to.contain.text("isLifted")
+    expect(dragitem.clientWidth).to.equal(200)
+    expect(dragitem.clientHeight).to.equal(100)
   })
 })

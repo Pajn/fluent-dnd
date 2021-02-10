@@ -339,6 +339,16 @@ export const useDraggable = (dragOptions?: DraggableOptions) => {
                 position: "fixed",
                 top: 0,
                 left: 0,
+                width:
+                  spacerSize.current &&
+                  spacerSize.current.marginLeft +
+                    spacerSize.current.width +
+                    spacerSize.current.marginRight,
+                height:
+                  spacerSize.current &&
+                  spacerSize.current.marginTop +
+                    spacerSize.current.height +
+                    spacerSize.current.marginBottom,
                 willChange: "transform",
                 pointerEvents: "none",
                 ...options?.portalElementProps?.style,
