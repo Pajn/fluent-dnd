@@ -317,7 +317,10 @@ export const useDraggable = (dragOptions?: DraggableOptions) => {
     spacerSize,
     spacerPos,
     element,
-    mapChildren: (children: ReactNode) =>
+    mapChildren: (
+      children: ReactNode,
+      options?: { portalElementProps: JSX.IntrinsicElements["div"] },
+    ) =>
       isLifted ? (
         <>
           <Spacer
@@ -331,12 +334,14 @@ export const useDraggable = (dragOptions?: DraggableOptions) => {
           <Portal>
             <div
               ref={dragContainerRefCallback}
+              {...options?.portalElementProps}
               style={{
                 position: "fixed",
                 top: 0,
                 left: 0,
                 willChange: "transform",
                 pointerEvents: "none",
+                ...options?.portalElementProps?.style,
               }}
             >
               {children}
