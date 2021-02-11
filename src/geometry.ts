@@ -73,14 +73,8 @@ export function getElementSize(element: HTMLElement): ElementSize {
   const style = window.getComputedStyle(element)
 
   return {
-    width:
-      rect.width +
-      parseInt(style.borderLeftWidth) +
-      parseInt(style.borderRightWidth),
-    height:
-      rect.height +
-      parseInt(style.borderTopWidth) +
-      parseInt(style.borderBottomWidth),
+    width: rect.width,
+    height: rect.height,
     marginTop: parseInt(style.marginTop),
     marginBottom: parseInt(style.marginBottom),
     marginLeft: parseInt(style.marginLeft),
