@@ -1,6 +1,6 @@
 {
   "name": "fluent-dnd",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Drag and drop library for react with beautiful animations",
   "repository": "Pajn/fluent-dnd",
   "homepage": "https://fluent-dnd.vercel.app/",
