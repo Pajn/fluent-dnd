@@ -115,7 +115,6 @@ const DropZone = () => {
 
   return (
     <div
-      data-testid="asd"
       {...drop.props}
       style={{
         display: "flex",
