@@ -1,5 +1,6 @@
 import { useContext } from "react"
 import { dndContext, OngoingDrag } from "./context"
+import type { DragType } from "./dragType"
 import { getBoundingClientRectIgnoringTransforms, Point } from "./geometry"
 import { useConstant, useLatest } from "./util"
 import { ObservableValue } from "./value"
@@ -23,7 +24,8 @@ function getPointerOffset(element: HTMLElement, startPoint: Point) {
   return Point.diff(startPoint, rect)
 }
 
-export function useDrag(dragOptions?: {
+export function useDrag<T>(dragOptions?: {
+  item?: { item: T; type: DragType<T> }
   onDragStart?: (drag: OngoingDrag, point: Point) => void
   onDragMove?: (drag: OngoingDrag, point: Point) => void
   onDragEnd?: (drag: OngoingDrag, point: Point) => void
@@ -51,6 +53,13 @@ export function useDrag(dragOptions?: {
             options.current?.onDragDropped?.(ongoingDrag)
           })
 
+          if (options.current?.item) {
+            OngoingDrag.setData(
+              ongoingDrag,
+              options.current.item.type,
+              options.current.item.item,
+            )
+          }
           controller.ongoingDrag.set(ongoingDrag)
           options.current?.onDragStart?.(ongoingDrag, point)
           context.dragStart.fire(ongoingDrag)

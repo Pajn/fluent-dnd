@@ -1,10 +1,12 @@
 import { useCallback, useContext, useEffect } from "react"
 import { dndContext, OngoingDrag } from "./context"
+import type { DragType } from "./dragType"
 import { Point, pointInsideRectangle } from "./geometry"
 import { useConstant, useLatest } from "./util"
 import { ObservableValue } from "./value"
 
 export function useDrop(dropOptions?: {
+  accept?: DragType<unknown>
   onDrop?: (drag: OngoingDrag, point: Point) => void
   onItemEntered?: (drag: OngoingDrag) => void
   onItemLeft?: (drag: OngoingDrag) => void
@@ -49,6 +51,9 @@ export function useDrop(dropOptions?: {
 
   useEffect(() => {
     return context.dragStart.subscribe((drag) => {
+      if (options.current?.accept) {
+        if (!OngoingDrag.getData(drag, options.current.accept)) return
+      }
       controller.ongoingDrag.set(drag)
       const position = controller.updatePosition()
 
@@ -70,12 +75,13 @@ export function useDrop(dropOptions?: {
           controller.ongoingDrag.set(undefined)
           const inside = pointInsideRectangle(position, point)
           controller.isDraggingOver.set(inside)
-          controller.isDraggingOver.set(false)
 
           if (inside) {
             options.current?.onDrop?.(drag, point)
             drag.droppedInDropZone.fire()
           }
+
+          controller.isDraggingOver.set(false)
         })
       }
     })

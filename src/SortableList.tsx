@@ -479,7 +479,7 @@ const ListItemSpacer = (props: { size: ElementSize }) => {
 }
 
 export function useSortabeListItem(
-  options?: Omit<DraggableOptions, "spacerZeroSized">,
+  options?: Omit<DraggableOptions<never>, "spacerZeroSized" | "item">,
 ) {
   const listContext = useContext(sortableListContext)
   const listItem = useContext(listItemContext)

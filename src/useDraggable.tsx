@@ -11,6 +11,7 @@ import React, {
 } from "react"
 import { animate, durations, easings, translate } from "./animation"
 import { DropState, OngoingDrag, useDndContext } from "./context"
+import type { DragType } from "./dragType"
 import {
   ElementSize,
   getBoundingClientRectIgnoringTransforms,
@@ -69,8 +70,9 @@ function useDropState(id: unknown | undefined) {
   return [drop, setDropState] as const
 }
 
-export type DraggableOptions = {
+export type DraggableOptions<T> = {
   id?: unknown
+  item?: { item: T; type: DragType<T> }
   spacerZeroSized?: boolean
   whenDragging?: CSSProperties
   onDragStart?: (drag: OngoingDrag, point: Point) => void
@@ -80,6 +82,7 @@ export type DraggableOptions = {
   onDropAnimationWillStart?: (
     drag: OngoingDrag,
     dropAnimation: {
+      isAccepted: () => boolean
       startPoint: Point
       targetPoint: Point
       element: HTMLElement
@@ -94,7 +97,7 @@ export type DraggableOptions = {
   ) => void
 }
 
-export const useDraggable = (dragOptions?: DraggableOptions) => {
+export function useDraggable<T>(dragOptions?: DraggableOptions<T>) {
   const dragContainerRef = useRef<HTMLElement | null>(null)
   const spacerRef = useRef<HTMLElement | null>(null)
   const pickupAnimation = useRef<Animation | null>(null)
@@ -138,6 +141,7 @@ export const useDraggable = (dragOptions?: DraggableOptions) => {
       dragContainerRef.current != null &&
       spacerRef.current != null
     ) {
+      let isAccepted = false
       const spacerDomRect = getBoundingClientRectIgnoringTransforms(
         spacerRef.current,
       )
@@ -160,11 +164,13 @@ export const useDraggable = (dragOptions?: DraggableOptions) => {
         animation = newAnimation
       }
       options.current?.onDropAnimationWillStart?.(dropState.current.drag, {
+        isAccepted: () => isAccepted,
         startPoint,
         targetPoint,
         element,
         getAnimation: () => animation,
         accept: () => {
+          isAccepted = true
           animation.effect?.updateTiming({
             duration: durations.acceptedDrop(
               Point.distance(startPoint, targetPoint),
@@ -251,6 +257,7 @@ export const useDraggable = (dragOptions?: DraggableOptions) => {
   }
 
   const drag = useDrag({
+    item: dragOptions?.item,
     onDragStart(drag, point) {
       if (element.current !== null) {
         spacerSize.set(getElementSize(element.current))
